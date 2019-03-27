@@ -1,0 +1,10 @@
+*** Settings ***
+Library           ExcelLibrary
+
+*** Variables ***
+${cmp1}           5
+${cmp2}           5
+
+*** Keywords ***
+Comparetwovariables
+    Should Be Equal As Integers    ${cmp1}    ${cmp2}

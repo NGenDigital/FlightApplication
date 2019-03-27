@@ -1,0 +1,18 @@
+*** Settings ***
+Library           SeleniumLibrary
+Library           ExcelLibrary
+
+*** Variables ***
+${username}       ${EMPTY}
+${password}       ${EMPTY}
+
+*** Keywords ***
+Login to flight application
+    Set Global Variable    ${username}
+    Set Global Variable    ${password}
+    Open Excel    C:/Robot Projects/DemoProject/LoginData.xls
+    ${username}    Read Cell Data By Coordinates    Login    1    2
+    ${password}    Read Cell Data By Coordinates    Login    2    2
+    Input Text    xpath://input[@type='email']    ${username}
+    Input Text    xpath://input[@type='password']    ${password}
+    Click Element    xpath://div[@class='btn']

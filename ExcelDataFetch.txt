@@ -1,0 +1,44 @@
+*** Settings ***
+Library           ExcelLibrary
+
+*** Variables ***
+${stestcaseNo}    ${EMPTY}
+${ssheetname}     ${EMPTY}
+${sColumnname}    ${EMPTY}
+${columncount}    ${EMPTY}
+${y}              ${EMPTY}
+${Header}         ${EMPTY}
+${Columnnum}      ${EMPTY}
+${itotalrows}     ${EMPTY}
+${irownumber}     ${EMPTY}
+${Ssearcheddata}    ${EMPTY}
+${TC_Num}         ${EMPTY}
+${Sheetname}      ${EMPTY}
+${TestcCasename}    ${EMPTY}
+${TestCaseColumn}    ${EMPTY}
+${sData}          ${EMPTY}
+
+*** Keywords ***
+Load Excel Data
+    [Arguments]    ${Sheetname}    ${TestcCasename}    ${TestCaseColumn}
+    Open Excel    Prac.xls
+    ${sData}    Get data from Excel with given column    ${Sheetname}    ${TestcCasename}    ${TestCaseColumn}
+    Log    ${sData}
+    [Return]    ${sData}
+
+Get data from Excel with given column
+    [Arguments]    ${ssheetname}    ${stestcaseNo}    ${sColumnname}
+    log    ${sColumnname}
+    ${columncount}    Get Column Count    ${ssheetname}
+    log    ${columncount}
+    : FOR    ${y}    IN RANGE    0    ${columncount}
+    \    ${Header}    Read Cell Data By Coordinates    ${ssheetname}    ${y}    0
+    \    Run Keyword If    '${Header}'=='${sColumnname}'    Set Test Variable    ${Columnnum}    ${y}
+    Log    ${Columnnum}
+    ${itotalrows}    ExcelLibrary.Get Row Count    ${ssheetname}
+    : FOR    ${irownumber}    IN RANGE    1    ${itotalrows}+1
+    \    ${TC_Num}    Read Cell Data By Coordinates    ${ssheetname}    0    ${irownumber}
+    \    ${Ssearcheddata}    Run Keyword If    "${stestcaseNo}"=="${TC_Num}"    ExcelLibrary.Read Cell Data By Coordinates    ${ssheetname}    ${Columnnum}
+    \    ...    ${irownumber}
+    \    Run Keyword If    "${stestcaseNo}"=="${TC_Num}"    Exit For Loop
+    [Return]    ${Ssearcheddata}
